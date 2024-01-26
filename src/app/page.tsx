@@ -4,6 +4,7 @@ import { Card, Title, Text } from "@tremor/react";
 import useSWR from "swr";
 import EmployeeTable from "@/components/EmployeeTable";
 import EmployeeAdd from "@/components/EmployeeAdd";
+import DepartmentAdd from "@/components/DepartmentAdd";
 import Spinner from "@/components/Spinner";
 
 export default function IndexPage() {
@@ -24,6 +25,7 @@ export default function IndexPage() {
       </Text>
       <div className="flex flex-row mt-3 space-x-2">
         <EmployeeAdd />
+        <DepartmentAdd />
       </div>
       <Card className="mt-6">
         {isLoadingEmployees ? (

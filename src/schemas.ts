@@ -6,4 +6,10 @@ export const addEmployeeSchema = z.object({
   department_id: z.number().int().positive(),
 });
 
+export const addDepartmentSchema = z.object({
+  name: z.string().min(1),
+});
+
 export type AddEmployeeSchema = z.infer<typeof addEmployeeSchema>;
+
+export type AddDepartmentSchema = z.infer<typeof addDepartmentSchema>;
