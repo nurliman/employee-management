@@ -1,6 +1,23 @@
 import { Card, Title, Text } from "@tremor/react";
+import { db } from "@/libs/kysely";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
+import EmployeeTable from "@/components/EmployeeTable";
 
-export default function IndexPage() {
+export default async function IndexPage() {
+  const data = await db
+    .selectFrom("employee")
+    .selectAll("employee")
+    .select((eb) => [
+      // pets
+      jsonArrayFrom(
+        eb
+          .selectFrom("department")
+          .selectAll("department")
+          .whereRef("department.id", "=", "employee.department_id")
+      ).as("departments"),
+    ])
+    .execute();
+
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
       <Title>Employee Management System</Title>
@@ -13,7 +30,9 @@ export default function IndexPage() {
         ligula eu nulla laoreet efficitur. Curabitur eros turpis, placerat at
         ante ut, venenatis vehicula orci.
       </Text>
-      <Card className="mt-6">{/* TODO: Add table here */}</Card>
+      <Card className="mt-6">
+        <EmployeeTable data={data} />
+      </Card>
     </main>
   );
 }
