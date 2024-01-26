@@ -1,22 +1,14 @@
-import { Card, Title, Text } from "@tremor/react";
-import { db } from "@/libs/kysely";
-import { jsonArrayFrom } from "kysely/helpers/postgres";
-import EmployeeTable from "@/components/EmployeeTable";
+"use client";
 
-export default async function IndexPage() {
-  const data = await db
-    .selectFrom("employee")
-    .selectAll("employee")
-    .select((eb) => [
-      // pets
-      jsonArrayFrom(
-        eb
-          .selectFrom("department")
-          .selectAll("department")
-          .whereRef("department.id", "=", "employee.department_id")
-      ).as("departments"),
-    ])
-    .execute();
+import { Card, Title, Text } from "@tremor/react";
+import useSWR from "swr";
+import EmployeeTable from "@/components/EmployeeTable";
+import EmployeeAdd from "@/components/EmployeeAdd";
+import Spinner from "@/components/Spinner";
+
+export default function IndexPage() {
+  const { data: employees = [], isLoading: isLoadingEmployees } =
+    useSWR("/api/employees");
 
   return (
     <main className="p-4 md:p-10 mx-auto max-w-7xl">
@@ -30,8 +22,17 @@ export default async function IndexPage() {
         ligula eu nulla laoreet efficitur. Curabitur eros turpis, placerat at
         ante ut, venenatis vehicula orci.
       </Text>
+      <div className="flex flex-row mt-3 space-x-2">
+        <EmployeeAdd />
+      </div>
       <Card className="mt-6">
-        <EmployeeTable data={data} />
+        {isLoadingEmployees ? (
+          <div className="flex items-center justify-center">
+            <Spinner className="!h-[50px] !w-[50px] !border-[7px]" />
+          </div>
+        ) : (
+          <EmployeeTable data={employees} />
+        )}
       </Card>
     </main>
   );

@@ -1,5 +1,8 @@
 import type { PropsWithChildren } from "react";
+import { ToastContainer } from "react-toastify";
 import Navbar from "@/components/Navbar";
+import Providers from "./providers";
+import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
 export const metadata = {
@@ -10,11 +13,14 @@ export const metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren<object>) {
   return (
-    <html lang="en" className="h-full bg-gray-50">
-      <body className="h-full">
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <Providers>
+      <html lang="en" className="h-full bg-gray-50">
+        <body className="h-full">
+          <Navbar />
+          {children}
+          <ToastContainer position="bottom-right" />
+        </body>
+      </html>
+    </Providers>
   );
 }
