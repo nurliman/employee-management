@@ -23,20 +23,9 @@ export type Database = {
 
 let db: Kysely<Database>;
 
-if (!process.env.VERCEL_ENV) {
-  // @ts-expect-error
-  const dialect = new (await import("kysely-postgres-js")).PostgresJSDialect({
-    // @ts-expect-error
-    postgres: (await import("postgres")).default(env.POSTGRES_URL),
-  });
-
-  // @ts-expect-error
-  db = new (await import("kysely")).Kysely({
-    dialect,
-  });
-} else {
-  db = createKysely();
-}
+db = createKysely({
+  connectionString: env.POSTGRES_URL,
+});
 
 export { db };
 export { sql } from "kysely";
